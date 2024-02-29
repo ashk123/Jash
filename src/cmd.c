@@ -1,26 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "info.h"
 
 int jash_cd(char **args);
 int jash_help(char **args);
 int jash_exit(char **args);
 int jash_rloop();
-char** ParseLoopCmd(char** args);
+int jash_version(char **args);
 
 char *builtin_str[] = {
   "cd",
   "help",
   "exit",
-  "loop"
+  "loop",
+  "version"
 };
 
 int (*builtin_func[]) (char **) = {
   &jash_cd,
   &jash_help,
   &jash_exit,
-  &jash_rloop
+  &jash_rloop,
+  &jash_version
 };
 
+int jash_version(char **args) {
+  printf("Jash " Year " Version " VERSION "\n");
+  return 1;
+}
 
 int jash_num_builtins() {
   return sizeof(builtin_str) / sizeof(char *);
@@ -31,14 +38,10 @@ int jash_rloop(char **args) {
     fprintf(stderr, "jash: expexted argument for looping\n");
     return 1;
   }
-  char** res = ParseLoopCmd(args);
   for (int i = 0; i < atoi(args[1]); i++) {
     jash_launch(args + 2);
   }
   return 1;
-}
-
-char** ParseLoopCmd(char** args) {
 }
 
 int jash_cd(char **args)
