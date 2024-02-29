@@ -1,19 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "info.h"
+#include <uthash.h>
+#include "var.h"
 
 int jash_cd(char **args);
 int jash_help(char **args);
 int jash_exit(char **args);
-int jash_rloop();
+int jash_rloop(char **args);
 int jash_version(char **args);
+int jash_var(char **args);
+int jash_gvar(char** args);
 
 char *builtin_str[] = {
   "cd",
   "help",
   "exit",
   "loop",
-  "version"
+  "version",
+  "var",
+  "gvar",
 };
 
 int (*builtin_func[]) (char **) = {
@@ -21,8 +27,51 @@ int (*builtin_func[]) (char **) = {
   &jash_help,
   &jash_exit,
   &jash_rloop,
-  &jash_version
+  &jash_version,
+  &jash_var,
+  &jash_gvar,
 };
+
+Memory* mem = NULL;
+
+int jash_gvar(char** args) {
+  Memory* javab = jash_GetVar(args[1], mem);
+  printf("%s\n", javab->values);
+}
+// void concatenate(char *str1, char *str2) {
+//     // Move pointer to the end of the first string
+//     while (*str1) {
+//         str1++;
+//     }
+
+//     // Copy characters of the second string to the end of the first string
+//     while (*str2) {
+//         *str1 = *str2;
+//         str1++;
+//         str2++;
+//     }
+//     *str1 = '\0';  // Terminate the concatenated string
+// }
+int jash_var(char** args) {
+  char* value = malloc(sizeof(char*));
+  // strcpy(value, "default");
+  // printf("%d", strlen(args));
+  // char** main = args+1;
+  // printf("%s", main[0]);
+  for (char** i = args+2; i[0] != NULL; i=i+1) {
+  // for (int i = 2; i < strlen(args) - 1; i++) {
+    // printf("%s\n", i[0]);
+    strcat(value, i[0]);
+    strcat(value, " ");
+    // printf("%s", nice);
+  }
+  // strcpy(value, value);
+  mem = jash_AddVar(args[1], value, mem);
+  printf("this is the value: %s\n", value);
+  printf("Jash saved your variable\n");
+  // free(value); we can add value to the list of variables and do some GC stuff on them :D
+  return 1;
+}
 
 int jash_version(char **args) {
   printf("Jash " Year " Version " VERSION "\n");

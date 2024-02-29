@@ -1,12 +1,13 @@
 CC=gcc
-OBJ_FILES=src/main.o src/cmd.o
+OBJ_FILES=src/main.o src/cmd.o src/var.o
 OUTPUT=jash
+headers=-Iinclude
 
-%.o: src/%.c
-	$(CC) -c $< -o $@
+%.o: %.c
+	$(CC) $< -c $(headers) -o $@
 
 jash: $(OBJ_FILES)
-	$(CC) -o $(OUTPUT) $^
+	$(CC) -o $(OUTPUT) $^ $(headers)
 
 clean:
 	rm $(OUTPUT)
