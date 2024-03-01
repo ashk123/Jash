@@ -32,10 +32,23 @@ int (*builtin_func[]) (char **) = {
   &jash_gvar,
 };
 
+// Main Jash Memory
 Memory* mem = NULL;
+
+void inner_builtin_variables() {
+	char* version = VERSION;
+	mem = jash_AddVar("version", (char*)VERSION, mem);
+	mem = jash_AddVar("NAME", "JASH", mem);
+	mem = jash_AddVar("PWD", ".", mem);
+	printf("[DEBUG] Initial default variables\n");
+}
 
 int jash_gvar(char** args) {
   Memory* javab = jash_GetVar(args[1], mem);
+  if (javab == NULL) {
+	  fprintf(stderr, "[JASH] Can't find that variable\n");
+	  return 1; // still be in progres
+  };
   printf("%s\n", javab->values);
 }
 // void concatenate(char *str1, char *str2) {
@@ -53,7 +66,7 @@ int jash_gvar(char** args) {
 //     *str1 = '\0';  // Terminate the concatenated string
 // }
 int jash_var(char** args) {
-  char* value = malloc(sizeof(char*));
+  char* value = malloc(sizeof(char*)); // be sure to use malloc when using strcat
   // strcpy(value, "default");
   // printf("%d", strlen(args));
   // char** main = args+1;

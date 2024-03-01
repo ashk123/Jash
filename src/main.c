@@ -28,6 +28,7 @@ void jash_loop(void) {
   char *line;
   char **args;
   int status = 1;
+  inner_builtin_variables();
   printf("%s\n", Greetings());
   do {
     printf("> ");

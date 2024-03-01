@@ -4,3 +4,4 @@ extern char *builtin_str[];
 extern int (*builtin_func[]) (char **);
 int jash_num_builtins();
 int jash_launch(char **args);
+void inner_builtin_variables();
